@@ -7,26 +7,28 @@
 
   <groupId>com.example.maven-project</groupId>
   <artifactId>maven-project</artifactId>
-  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Maven Project</name>
+  <packaging>pom</packaging>
 
+  <name>Maven Multi Module Project</name>
+
+  <!-- ===================== PROPERTIES ===================== -->
   <properties>
+    <java.version>1.7</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <!-- Sonar Properties -->
+    <!-- Sonar -->
     <sonar.projectKey>maven-project</sonar.projectKey>
     <sonar.projectName>Maven Project</sonar.projectName>
   </properties>
 
-  <!-- Multi-module -->
+  <!-- ===================== MODULES ===================== -->
   <modules>
     <module>server</module>
     <module>webapp</module>
   </modules>
 
-  <!-- Nexus Repository -->
+  <!-- ===================== NEXUS ===================== -->
   <distributionManagement>
     <repository>
       <id>nexus</id>
@@ -38,39 +40,100 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <!-- ===================== DEPENDENCY MANAGEMENT ===================== -->
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Test -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit-dep</artifactId>
+        <version>4.10</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>1.2.1</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>1.2.1</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.8.5</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Web -->
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.2</version>
+        <scope>provided</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- ===================== BUILD ===================== -->
   <build>
     <plugins>
 
       <!-- Compiler -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
       </plugin>
 
-      <!-- SonarQube Maven Plugin (FIX) -->
+      <!-- WAR -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+      <!-- Jetty -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>8.0.0.M1</version>
+      </plugin>
+
+      <!-- SonarQube -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.10.0.2594</version>
       </plugin>
 
-      <!-- Release -->
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-        </configuration>
-      </plugin>
-
     </plugins>
   </build>
 
-  <!-- Sonar Profile -->
+  <!-- ===================== SONAR PROFILE ===================== -->
   <profiles>
     <profile>
       <id>sonar</id>
@@ -78,7 +141,7 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <sonar.host.url>http://3.110.130.241:9000</sonar.host.url>
+        <sonar.host.url>http://13.204.46.51:9000</sonar.host.url>
       </properties>
     </profile>
   </profiles>
